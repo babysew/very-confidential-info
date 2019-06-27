@@ -1,0 +1,8 @@
+CREATE TABLE Transactions(
+     Original_Name 	Varchar2(50)
+,    Original_City 	Varchar2(50)
+,    Google_Search_Name	Varchar2(50)
+,    Address 	Varchar2(200)
+,    Latitude 	Decimal
+,    Longitude 	Decimal
+);
