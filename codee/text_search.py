@@ -20,13 +20,15 @@ API_KEY = 'AIzaSyAO6e32mq3LQaOY6T323x_AFUoSEwHn2hA' # AIzaSyAO6e32mq3LQaOY6T323x
 PLACES_URL = 'https://maps.googleapis.com/maps/api/place/textsearch/json?'
 
 # Make dataframe
-df = pd.read_csv('short_merchant.csv', usecols=[0, 1])
+df = pd.read_csv('new_merchant.csv', usecols=[0, 1])
+
+df2 = pd.DataFrame(columns=['orig_name', 'orig_city', 'name', 'address', 'latitude', 'longitude', 'no_of_results'])
 
 # Construct search query
 df['search_query'] = df['Merchant_Name'].astype(str) + ' ' + df['City']
 # search_query = search_query.str.replace(' ', '+')
 
-save_path = 'C:\\Tushar\\notebookk\\new outputs\\28_06\\'
+save_path = 'C:\\Tushar\\notebookk\\new outputs\\29_06\\'
 
 random.seed()
 
@@ -55,17 +57,21 @@ for row in df.itertuples():
 
             # Create csv file
             filename = save_path + row.search_query + '.csv'
-            f = open(filename, 'w', encoding='utf-8-sig')
+            # f = open(filename, 'w', encoding='utf-8-sig')
 
             for i in range(size_of_result):
                 name = data['results'][i]['name']
                 address = data['results'][i]['formatted_address']
                 latitude = data['results'][i]['geometry']['location']['lat']
                 longitude = data['results'][i]['geometry']['location']['lng']
-
-                f.write(row.Merchant_Name + ',' + row.City + ',' + name.replace(',', '') + ',' + address.replace(',', '') + ',' + str(latitude) + ',' + str(longitude) + ',' + str(size_of_result) + '\n')
-
-            f.close()
+                
+                df2.loc[i] = [row.Merchant_Name] + [row.City] + [name] + [address] + [str(latitude)] + [str(longitude)] + [str(size_of_result)]
+                
+                # f.write(row.Merchant_Name + ',' + row.City + ',' + name.replace(',', '') + ',' + address.replace(',', '') + ',' + str(latitude) + ',' + str(longitude) + ',' + str(size_of_result) + '\n')
+            
+            df2.to_csv(filename, encoding='utf-8-sig', index=False, header=False)
+            
+            # f.close()
 
             print('File successfully saved for "{}".'.format(row.search_query))
 
